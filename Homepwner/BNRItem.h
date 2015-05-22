@@ -16,11 +16,6 @@
 @property (nonatomic) int valueInDollars;
 @property (nonatomic, readonly, strong) NSDate *dateCreated;
 
-- (void)setContainedItem:(BNRItem *)item;
-- (BNRItem *)containedItem; // returns contained item
-
-- (void)setContainer:(BNRItem *)item;
-- (BNRItem *)container;
 
 
 

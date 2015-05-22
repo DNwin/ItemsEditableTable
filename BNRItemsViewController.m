@@ -30,9 +30,18 @@
 }
 
 // methods for two buttons
+
+// Adds a new item
 - (IBAction)addNewItem:(id)sender
 {
+    // new bnr item
+    BNRItem *newItem = [[BNRItemStore sharedStore] createItem]; // create random item
+    // get index of random item in array
+    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
     
+    // get index path
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 - (IBAction)toggleEditingMode:(id)sender
@@ -41,11 +50,15 @@
     {
         // if editing is enabled
         [sender setTitle:@"Edit" forState:UIControlStateNormal];
+        // disable editing
+        [self setEditing:NO animated:YES];
     }
     else
     {
         // if editing is disabled
         [sender setTitle:@"Done" forState:UIControlStateNormal];
+        // enter editing mode
+        [self setEditing:YES animated:YES];
     }
 }
 
@@ -57,11 +70,7 @@
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)
     {
-        // make bnritemstore object (lazy instantiate), only creates singleton, add 5 items to store
-        for (int i = 0; i < 5; i++)
-        {
-            [[BNRItemStore sharedStore] createItem];
-        }
+        
     }
     return self;
 }
@@ -77,6 +86,9 @@
 //- (NSInteger)tableView:(UITableView *)tableView
 // numberOfRowsInSection:(NSInteger)section
 
+// REQUIRED PROTOCOLS
+
+// tableView asks delegate for number of rows
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // returns how many items in table
@@ -84,8 +96,6 @@
     number = [[[BNRItemStore sharedStore] allItems] count];
     return number;
 }
-
-
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -104,6 +114,36 @@
     return cell;
 }
 
+// protocol for deletion
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    // IF table view is asking to commit a delte command
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        NSArray *items = [[BNRItemStore sharedStore] allItems];
+        BNRItem *item = items[indexPath.row]; // get item in array at equivalent row
+        [[BNRItemStore sharedStore] removeItem:item]; // remove item from array
+        
+        // remove the row from table view
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+    
+}
+
+//// protocol for moving,
+//// *** Implementing this protocol method allows rows to be moved when editing is on
+//
+- (void)tableView:(UITableView *)tableView
+    moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
+            toIndexPath:(NSIndexPath *)toIndexPath
+{
+    // move item in array
+    [[BNRItemStore sharedStore] moveItemAtIndex:fromIndexPath.row
+                                        toIndex:toIndexPath.row];
+    
+}
 
 // FOR CUSTOM VIEWS ON TOP OF TABLE VIEW
 - (void)viewDidLoad

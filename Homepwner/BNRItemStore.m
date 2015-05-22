@@ -61,7 +61,7 @@
     return self.privateItems;
 }
 
-//
+// adds random item to private array
 - (BNRItem *)createItem
 {
     BNRItem *item = [BNRItem randomItem];
@@ -71,6 +71,28 @@
     return item;
 }
 
+// removes an item from the private array
+- (void)removeItem:(BNRItem *)item
+{
+    [self.privateItems removeObjectIdenticalTo:item];
+}
+
+// move item from index to another index
+- (void)moveItemAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex
+{
+    // check if same indexes, do nothing
+    if (fromIndex == toIndex)
+    {
+        return;
+    }
+    
+    // point to the object
+    BNRItem *item = self.privateItems[fromIndex];
+    // remove from array
+    [self.privateItems removeObjectAtIndex:fromIndex];
+    // add to new position
+    [self.privateItems insertObject:item atIndex:toIndex];
+}
 
 
 
