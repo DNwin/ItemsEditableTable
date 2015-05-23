@@ -21,8 +21,12 @@
     // Override point for customization after application launch.
     // Make view controller
     BNRItemsViewController *itemsViewController = [[BNRItemsViewController alloc] init];
-    // Set root vc
-    self.window.rootViewController = itemsViewController;
+
+    // create instanc of nav controller, only item on stack is only itemsviewcontroller
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:itemsViewController];
+    
+    // set nav controller in window hierarchy
+    self.window.rootViewController = navController;
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
