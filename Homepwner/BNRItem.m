@@ -51,7 +51,7 @@
 }
 
 
-// init
+// designated initializer - createas an item with name, value, serial, date, uuid
 -(instancetype)initWithItemName:(NSString *)name valueInDollars:(int)value serialNumber:(NSString *)sNumber
 {
     // call superclass init
@@ -65,6 +65,11 @@
         
         // current date and time
         _dateCreated = [[NSDate alloc] init];
+        
+        // set UID
+        NSUUID *uuid = [[NSUUID alloc]init]; // make key
+        NSString *key = [uuid UUIDString]; // key as string
+        _itemKey = key;
     }
     
     return self;

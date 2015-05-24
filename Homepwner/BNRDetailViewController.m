@@ -8,17 +8,26 @@
 
 #import "BNRDetailViewController.h"
 #import "BNRItem.h"
+#import "BNRImageStore.h" 
 
-@interface BNRDetailViewController ()
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate> // uinavcontdelegate is superclass of imagepicker
 
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialNumberField;
 @property (weak, nonatomic) IBOutlet UITextField *valueField;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 
 @end
 
 @implementation BNRDetailViewController
+
+- (IBAction)backgroundTapped:(id)sender {
+    // changed xib class from UIView to UIControl enable it to handle touch events
+    [self.view endEditing:YES]; // end first responder
+}
+
 
 // override item getter
 - (void)setItem:(BNRItem *)item
@@ -47,6 +56,12 @@
     }
     
     self.dateLabel.text = [dateFormatter stringFromDate:item.dateCreated];
+    
+    // load image
+    NSString *imageKey = self.item.itemKey;
+    UIImage *imageToDisplay = [[BNRImageStore sharedStore] imageForKey:imageKey];
+    
+    self.imageView.image = imageToDisplay;
 }
 
 // call everytime view gets popped off stack
@@ -67,6 +82,46 @@
     
 }
 
+// action - when camera button is pressed
+- (IBAction)takePicture:(id)sender {
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    
+    // if device has camera, take picture else pick from photo library
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+    {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    }
+    else
+    {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    }
+    imagePicker.delegate = self;
+    
+    // PRESENT viewcontroller modaly
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+// PROTOCOL METHODS //
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    // get image from dictionary
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    
+    // store image using the current object's UID into imagestore
+    [[BNRImageStore sharedStore] setImage:image
+                                   forKey:self.item.itemKey];
+    // put image onto image view
+    self.imageView.image = image;
+    
+    // DISMISS - take image picker off screen
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder]; // resign keyboard when return is pressed
+    return YES;
+}
 
 
 @end

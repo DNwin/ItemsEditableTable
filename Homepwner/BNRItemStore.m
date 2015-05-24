@@ -8,6 +8,8 @@
 
 #import "BNRItemStore.h"
 #import "BNRItem.h"
+#import "BNRImageStore.h"
+
 @interface BNRItemStore()
 
 @property (nonatomic) NSMutableArray *privateItems;
@@ -35,6 +37,8 @@
     return sharedStore;
 }
 
+#pragma mark View controller lifecycle
+
 // if init is called, throw exception
 - (instancetype)init
 {
@@ -56,10 +60,14 @@
     return self;
 }
 
+#pragma mark Properties
+
 - (NSArray *)allItems
 {
     return self.privateItems;
 }
+
+#pragma mark Data manipulation
 
 // adds random item to private array
 - (BNRItem *)createItem
@@ -74,6 +82,10 @@
 // removes an item from the private array
 - (void)removeItem:(BNRItem *)item
 {
+    // when item is removed, remove also remove image from storage
+    NSString *key = item.itemKey;
+    [[BNRImageStore sharedStore] deleteImageForKey:key];
+    
     [self.privateItems removeObjectIdenticalTo:item];
 }
 

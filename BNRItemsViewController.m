@@ -20,20 +20,8 @@
 
 // methods for two buttons
 
-// Adds a new item
-- (IBAction)addNewItem:(id)sender
-{
-    // new bnr item
-    BNRItem *newItem = [[BNRItemStore sharedStore] createItem]; // create random item
-    // get index of random item in array
-    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
-    
-    // get index path
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-}
 
-
+#pragma mark Controller Life Cycle
 
 // replace superclass designated initializer with init
 - (instancetype)init
@@ -45,7 +33,7 @@
         UINavigationItem *navItem = self.navigationItem;
         navItem.title = @"Homelist";
         
-        // new bar button item that adds new item
+        // ADD new item, new bar button item that adds by calling addNewItem
         UIBarButtonItem *bbi = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addNewItem:)];
         navItem.rightBarButtonItem = bbi;
         
@@ -62,6 +50,7 @@
     return [self init];
 }
 
+#pragma mark View Life Cycle
 ///////// view appear
 
 - (void)viewWillAppear:(BOOL)animated
@@ -75,6 +64,31 @@
 //- (NSInteger)tableView:(UITableView *)tableView
 // numberOfRowsInSection:(NSInteger)section
 
+// FOR CUSTOM VIEWS ON TOP OF TABLE VIEW
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // register the type of cell to use if no cells in reuse pool
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+}
+
+#pragma mark Actions
+// Adds a new item
+- (IBAction)addNewItem:(id)sender
+{
+    // new bnr item
+    BNRItem *newItem = [[BNRItemStore sharedStore] createItem]; // create random item
+    // get index of random item in array
+    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
+    
+    // get index path
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+}
+
+
+#pragma mark Table view data source
 ////////////////////// REQUIRED PROTOCOLS
 
 // tableView asks delegate for number of rows
@@ -103,6 +117,7 @@
 }
 
 // protocol for deletion
+
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -133,6 +148,8 @@
     
 }
 
+#pragma mark Table view delegate
+
 // protocol for selecting a row
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -146,13 +163,6 @@
     // push to top of stack
     [[self navigationController]pushViewController:detailViewController animated:YES];
 }
-// FOR CUSTOM VIEWS ON TOP OF TABLE VIEW
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // register the type of cell to use if no cells in reuse pool
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
-}
+
 
 @end
