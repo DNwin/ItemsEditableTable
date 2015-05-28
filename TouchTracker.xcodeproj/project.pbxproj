@@ -12,6 +12,9 @@
 		9560A6FF1B11E2EF006D2FC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9560A6FE1B11E2EF006D2FC8 /* Images.xcassets */; };
 		9560A7021B11E2EF006D2FC8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9560A7001B11E2EF006D2FC8 /* LaunchScreen.xib */; };
 		9560A70E1B11E2EF006D2FC8 /* TouchTrackerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9560A70D1B11E2EF006D2FC8 /* TouchTrackerTests.m */; };
+		95D9D0C31B11E4C6009D4AA5 /* BNRLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D9D0C21B11E4C6009D4AA5 /* BNRLine.m */; };
+		95D9D0C61B11E596009D4AA5 /* BNRDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D9D0C51B11E596009D4AA5 /* BNRDrawView.m */; };
+		95D9D0C91B11E5E5009D4AA5 /* BNRDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D9D0C81B11E5E5009D4AA5 /* BNRDrawViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +38,12 @@
 		9560A7071B11E2EF006D2FC8 /* TouchTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9560A70C1B11E2EF006D2FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9560A70D1B11E2EF006D2FC8 /* TouchTrackerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchTrackerTests.m; sourceTree = "<group>"; };
+		95D9D0C11B11E4C6009D4AA5 /* BNRLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNRLine.h; sourceTree = "<group>"; };
+		95D9D0C21B11E4C6009D4AA5 /* BNRLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNRLine.m; sourceTree = "<group>"; };
+		95D9D0C41B11E596009D4AA5 /* BNRDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNRDrawView.h; sourceTree = "<group>"; };
+		95D9D0C51B11E596009D4AA5 /* BNRDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNRDrawView.m; sourceTree = "<group>"; };
+		95D9D0C71B11E5E5009D4AA5 /* BNRDrawViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNRDrawViewController.h; sourceTree = "<group>"; };
+		95D9D0C81B11E5E5009D4AA5 /* BNRDrawViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNRDrawViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +87,12 @@
 			children = (
 				9560A6FB1B11E2EF006D2FC8 /* AppDelegate.h */,
 				9560A6FC1B11E2EF006D2FC8 /* AppDelegate.m */,
+				95D9D0C11B11E4C6009D4AA5 /* BNRLine.h */,
+				95D9D0C21B11E4C6009D4AA5 /* BNRLine.m */,
+				95D9D0C41B11E596009D4AA5 /* BNRDrawView.h */,
+				95D9D0C71B11E5E5009D4AA5 /* BNRDrawViewController.h */,
+				95D9D0C81B11E5E5009D4AA5 /* BNRDrawViewController.m */,
+				95D9D0C51B11E596009D4AA5 /* BNRDrawView.m */,
 				9560A6FE1B11E2EF006D2FC8 /* Images.xcassets */,
 				9560A7001B11E2EF006D2FC8 /* LaunchScreen.xib */,
 				9560A6F71B11E2EF006D2FC8 /* Supporting Files */,
@@ -160,6 +175,7 @@
 				TargetAttributes = {
 					9560A6F31B11E2EF006D2FC8 = {
 						CreatedOnToolsVersion = 6.3;
+						DevelopmentTeam = D7444GWDLH;
 					};
 					9560A7061B11E2EF006D2FC8 = {
 						CreatedOnToolsVersion = 6.3;
@@ -211,7 +227,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9560A6FD1B11E2EF006D2FC8 /* AppDelegate.m in Sources */,
+				95D9D0C91B11E5E5009D4AA5 /* BNRDrawViewController.m in Sources */,
+				95D9D0C31B11E4C6009D4AA5 /* BNRLine.m in Sources */,
 				9560A6FA1B11E2EF006D2FC8 /* main.m in Sources */,
+				95D9D0C61B11E596009D4AA5 /* BNRDrawView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,7 +348,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = TouchTracker/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -339,7 +360,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = TouchTracker/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -398,6 +421,7 @@
 				9560A7131B11E2EF006D2FC8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9560A7141B11E2EF006D2FC8 /* Build configuration list for PBXNativeTarget "TouchTrackerTests" */ = {
 			isa = XCConfigurationList;
@@ -406,6 +430,7 @@
 				9560A7161B11E2EF006D2FC8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
