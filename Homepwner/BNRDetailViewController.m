@@ -25,8 +25,31 @@
 
 - (IBAction)backgroundTapped:(id)sender {
     // changed xib class from UIView to UIControl enable it to handle touch events
-    [self.view endEditing:YES]; // end first responder
+    [self.view endEditing:YES]; // end first responder, remove keyboard
+    
+    // FOR TESTING - exercise any ambiguity in views
+//    for (UIView *subview in self.view.subviews)
+//    {
+//        if ([subview hasAmbiguousLayout])
+//        {
+//             [subview exerciseAmbiguityInLayout];
+//        }
+//       
+//    }
 }
+
+// Gets called anytime view changes in size, override to check if any subviews have anbiguous layout
+//- (void)viewDidLayoutSubviews
+//{
+//    for (UIView *subview in self.view.subviews)
+//    {
+//        if ([subview hasAmbiguousLayout])
+//        {
+//            NSLog(@"AMBIGUOUS: %@", subview);
+//            // will get called
+//        }
+//    }
+//}
 
 
 // override item getter
