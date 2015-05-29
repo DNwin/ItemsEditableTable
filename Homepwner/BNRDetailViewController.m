@@ -23,6 +23,38 @@
 
 @implementation BNRDetailViewController
 
+- (void)viewDidLoad
+{
+    // Programmatically add UIImageView
+    UIImageView *iv = [[UIImageView alloc] init];
+    
+    // scale images to fit (Aspect Fit)
+    iv.contentMode = UIViewContentModeScaleAspectFit;
+    // No translated constraints, iOS used this before autolayout, IMPORTANT
+    iv.translatesAutoresizingMaskIntoConstraints = NO;
+    // Add subview
+    [self.view addSubview:iv];
+    // Point to the property
+    self.imageView = iv;
+    [self.imageView setContentHuggingPriority:200 forAxis:UILayoutConstraintAxisVertical];
+    [self.imageView setContentCompressionResistancePriority:700 forAxis:UILayoutConstraintAxisVertical];
+    
+    // Make a dictionary to prepare adding of constraints
+    NSDictionary *nameMap = @{@"imageView" : self.imageView,
+                              @"dateLabel" : self.dateLabel,
+                              @"toolbar"   : self.toolbar};
+    
+    // imageview is 0 points from superview at left and right edges
+    NSArray *horizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[imageView]-0-|" options:0 metrics:nil views:nameMap];
+    // 8 points (default) between them
+    NSArray *verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[dateLabel]-[imageView]-[toolbar]" options:0 metrics:nil views:nameMap];
+    
+    // add constraint to the view that contains all views effected, in this case the superview
+    [self.view addConstraints:horizontalConstraints];
+    [self.view addConstraints:verticalConstraints];
+
+    
+}
 - (IBAction)backgroundTapped:(id)sender {
     // changed xib class from UIView to UIControl enable it to handle touch events
     [self.view endEditing:YES]; // end first responder, remove keyboard
