@@ -101,8 +101,7 @@
     
     // present nav controller
     [self presentViewController:navController animated:YES completion:nil];
-    
-    
+
     
     
 //    // get index of random item in array

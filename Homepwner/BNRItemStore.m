@@ -29,10 +29,16 @@
     // check to see if a instance exists, then returnl
     static BNRItemStore *sharedStore = nil; // not destroyed when done executing
     
-    if (!sharedStore)
-    {
-        sharedStore = [[self alloc] initPrivate];
-    }
+//    if (!sharedStore)
+//    {
+//        sharedStore = [[self alloc] initPrivate];
+//    }
+    
+    // Thread safe
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedStore = [[BNRItemStore alloc] initPrivate];
+    });
     
     return sharedStore;
 }
@@ -55,9 +61,40 @@
     // initialize array
     if (self)
     {
-        _privateItems = [[NSMutableArray alloc] init];
+        // load private array when it launches
+        // Get path location
+        NSString *path = [self itemArchivePath];
+        // Initialize private array from file using path
+        _privateItems = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        
+        // If no saved array, create a new one
+        if (!_privateItems)
+        {
+            _privateItems = [[NSMutableArray alloc] init];
+        }
     }
     return self;
+}
+
+#pragma mark Storage methods
+- (BOOL)saveChanges
+{
+    NSString *path = [self itemArchivePath];
+    // Return YES on success
+    return [NSKeyedArchiver archiveRootObject:self.privateItems toFile:path];
+}
+
+// returns a string containing the item archive path
+- (NSString *)itemArchivePath
+{
+    // function searches filesystem for a path that meets criteria
+    // last two arguments always the same on iOS
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    // Get one document directory from list
+    NSString *documentDirectory = [documentDirectories firstObject];
+    
+    return [documentDirectory stringByAppendingPathComponent:@"items.archive"];
 }
 
 #pragma mark Properties
@@ -72,8 +109,9 @@
 // adds random item to private array
 - (BNRItem *)createItem
 {
-    BNRItem *item = [BNRItem randomItem];
-    // make random item add it to private items array
+//    BNRItem *item = [BNRItem randomItem];
+    BNRItem *item = [[BNRItem alloc] init];
+
     [self.privateItems addObject:item];
     
     return item;

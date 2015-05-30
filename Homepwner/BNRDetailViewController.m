@@ -253,17 +253,19 @@
     imagePicker.delegate = self;
     
 
-    // IF ipad
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-    {
-        // initialize popover camera, add it to the image picker controller
-        self.imagePickerPopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-    }
-    else // IF iphone
-    {
-        // Present viewcontroller modaly
+//    // IF ipad
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+//    {
+//        // initialize popover camera, add it to the image picker controller
+//        self.imagePickerPopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+//    }
+//    else // IF iphone
+//    {
+//        // Present viewcontroller modaly
+//        [self presentViewController:imagePicker animated:YES completion:nil];
+//    };
+    
         [self presentViewController:imagePicker animated:YES completion:nil];
-    };
 }
 
 

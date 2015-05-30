@@ -13,7 +13,7 @@
 
 + (instancetype)sharedStore;
 
-- (void)setImage:(UIImage *)image forKey:(NSString *)key;
+- (void)setImage:(UIImage *)image forKey:(NSString *)key; // Set an image using a key
 - (UIImage *)imageForKey:(NSString *)key;
 - (void)deleteImageForKey:(NSString *)key;
 
