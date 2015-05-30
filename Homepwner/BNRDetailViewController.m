@@ -9,8 +9,12 @@
 #import "BNRDetailViewController.h"
 #import "BNRItem.h"
 #import "BNRImageStore.h" 
+#import "BNRItemStore.h"
 
-@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate> // uinavcontdelegate is superclass of imagepicker
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIPopoverControllerDelegate>
+// uinavcontdelegate is superclass of imagepicker, popover controller camera for iPads
+
+@property (strong, nonatomic) UIPopoverController *imagePickerPopover; // Popover controller for iPad, takePicture:
 
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialNumberField;
@@ -18,10 +22,42 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraButton;
+
 
 @end
 
 @implementation BNRDetailViewController
+
+// New designated initializer, checks if it is for a new item and adds new bar button items
+- (instancetype)initForNewItem:(BOOL)isNew
+{
+    // Call originial designated init
+    self = [super initWithNibName:nil bundle:nil];
+    
+    if (self)
+    {
+        // Show Done and cancel buttons if detailview is making a new item
+        if (isNew)
+        {
+            // Done button as right bar button
+            UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(save:)];
+            self.navigationItem.rightBarButtonItem = doneItem;
+            
+            // Cancel button as left bar button
+            UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+            self.navigationItem.leftBarButtonItem = cancelItem;
+        }
+    }
+    
+    return self;
+}
+
+// Override designated initializer of UIViewController, throw exception if called
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    @throw [NSException exceptionWithName:@"Wrong initializer" reason:@"Use initForNewItem" userInfo:nil];
+}
 
 - (void)viewDidLoad
 {
@@ -52,9 +88,41 @@
     // add constraint to the view that contains all views effected, in this case the superview
     [self.view addConstraints:horizontalConstraints];
     [self.view addConstraints:verticalConstraints];
+}
 
+
+// Send this method when device is rotated
+- (void)preparesViewForOrientation:(UIInterfaceOrientation)orientation
+{
+    // Do nothing if ipad
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+    {
+        return;
+    }
+    
+    // IF in landscape
+    if (UIInterfaceOrientationIsLandscape(orientation))
+    {
+        // disable camera button
+        self.imageView.hidden = YES;
+        self.cameraButton.enabled = NO;
+    }
+    else // if in portrait
+    {
+        self.imageView.hidden = NO;
+        self.cameraButton.enabled = YES;
+    }
     
 }
+
+
+// Override - this is sent everytime there's a rotation
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [self preparesViewForOrientation:toInterfaceOrientation];
+}
+
+
 - (IBAction)backgroundTapped:(id)sender {
     // changed xib class from UIView to UIControl enable it to handle touch events
     [self.view endEditing:YES]; // end first responder, remove keyboard
@@ -117,6 +185,10 @@
     UIImage *imageToDisplay = [[BNRImageStore sharedStore] imageForKey:imageKey];
     
     self.imageView.image = imageToDisplay;
+    
+    // Check for current orientation
+    UIInterfaceOrientation io = [[UIApplication sharedApplication] statusBarOrientation];
+    [self preparesViewForOrientation:io];
 }
 
 // call everytime view gets popped off stack
@@ -137,8 +209,36 @@
     
 }
 
+#pragma Button Methods
+- (void)save:(id)sender
+{
+    // To dismiss modal VC, the calling controller needs to be dismiss it.
+    // The property presentingViewController points to the original BRNViewController
+    // also send a block to reload the data upon completion
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:self.dismissBlock];
+}
+
+- (void)cancel:(id)sender
+{
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:self.dismissBlock];
+    
+    // Remove the current item from sharedstore
+    [[BNRItemStore sharedStore] removeItem:self.item];
+    
+}
+
+
 // action - when camera button is pressed
 - (IBAction)takePicture:(id)sender {
+    
+    // If the popover is up, remove it
+    if ([self.imagePickerPopover isPopoverVisible])
+    {
+        [self.imagePickerPopover dismissPopoverAnimated:YES];
+        self.imagePickerPopover = nil;
+        return;
+    }
+    // Make image picker controller
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     
     // if device has camera, take picture else pick from photo library
@@ -152,11 +252,31 @@
     }
     imagePicker.delegate = self;
     
-    // PRESENT viewcontroller modaly
-    [self presentViewController:imagePicker animated:YES completion:nil];
+
+    // IF ipad
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
+        // initialize popover camera, add it to the image picker controller
+        self.imagePickerPopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+    }
+    else // IF iphone
+    {
+        // Present viewcontroller modaly
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    };
 }
 
-// PROTOCOL METHODS //
+
+#pragma mark Protocol Methods
+
+// PROTOCOL - Dismisses iPad imagepopover
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+    self.imagePickerPopover = nil;
+}
+
+
+// Protocol - Sent when picture is taken
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     // get image from dictionary
@@ -168,10 +288,20 @@
     // put image onto image view
     self.imageView.image = image;
     
-    // DISMISS - take image picker off screen
-    [self dismissViewControllerAnimated:YES completion:nil];
+    // Do I have a popover?
+    if (self.imagePickerPopover)
+    {
+        [self.imagePickerPopover dismissPopoverAnimated:YES];
+        self.imagePickerPopover = nil;
+    }
+    else
+    {
+        // DISMISS - take modal image picker off screen
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
+// Protocol - sent when return key is pressed
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder]; // resign keyboard when return is pressed

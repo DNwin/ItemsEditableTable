@@ -12,6 +12,10 @@
 
 @interface BNRDetailViewController : UIViewController
 
+// Designated initializer, checks if it is for a new item
+- (instancetype)initForNewItem:(BOOL)isNew;
+
 @property (nonatomic, strong)BNRItem *item;
+@property (nonatomic, copy) void (^dismissBlock)(void); // Block
 
 @end

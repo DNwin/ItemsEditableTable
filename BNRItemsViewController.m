@@ -79,12 +79,38 @@
 {
     // new bnr item
     BNRItem *newItem = [[BNRItemStore sharedStore] createItem]; // create random item
-    // get index of random item in array
-    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
     
-    // get index path
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    // Present the detail navigation controller modally
+    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] initForNewItem:YES];
+    
+    detailViewController.item = newItem;
+    
+    // SET BLOCK - Make a new block to be used by the detailViewController to be used later
+    detailViewController.dismissBlock =
+    ^{
+        // reloads the data
+        [self.tableView reloadData];
+    };
+    
+    // make new navigation controller then present it modally
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
+    
+    // Change modal presentation style
+    // NOTE : ItemsViewController does not get sent viewWillAppear because it never goes off screen
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    // present nav controller
+    [self presentViewController:navController animated:YES completion:nil];
+    
+    
+    
+    
+//    // get index of random item in array
+//    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
+//    
+//    // get index path
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
+//    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 
@@ -154,7 +180,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // make new controller
-    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] init];
+    
+    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] initForNewItem:NO];
+    
     
     NSArray *items = [[BNRItemStore sharedStore] allItems];
     BNRItem *selectedItem = items[indexPath.row];
