@@ -24,10 +24,18 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraButton;
 
+// Outlets for labels to support dynamic type
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *serialNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *valueLabel;
+
 
 @end
 
 @implementation BNRDetailViewController
+
+
+#pragma mark Controller Life Cycle
 
 // New designated initializer, checks if it is for a new item and adds new bar button items
 - (instancetype)initForNewItem:(BOOL)isNew
@@ -48,6 +56,12 @@
             UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
             self.navigationItem.leftBarButtonItem = cancelItem;
         }
+        
+        // Register as observer for font change, updateFonts: if notificed
+        // Unreg in dealloc
+        NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+        [defaultCenter addObserver:self selector:@selector(updateFonts) name:UIContentSizeCategoryDidChangeNotification object:nil];
+        
     }
     
     return self;
@@ -57,6 +71,66 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     @throw [NSException exceptionWithName:@"Wrong initializer" reason:@"Use initForNewItem" userInfo:nil];
+}
+
+- (void)dealloc
+{
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:self];
+}
+#pragma mark View Life Cycle
+
+// called everytime view loads
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    BNRItem *item = self.item;
+    
+    self.nameField.text = item.itemName;
+    self.serialNumberField.text = item.serialNumber;
+    self.valueField.text = [NSString stringWithFormat:@"%d", item.valueInDollars];
+    
+    static NSDateFormatter *dateFormatter = nil;
+    if (!dateFormatter)
+    {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    }
+    
+    self.dateLabel.text = [dateFormatter stringFromDate:item.dateCreated];
+    
+    // load image
+    NSString *imageKey = self.item.itemKey;
+    UIImage *imageToDisplay = [[BNRImageStore sharedStore] imageForKey:imageKey];
+    
+    self.imageView.image = imageToDisplay;
+    
+    // Set fonts
+    [self updateFonts];
+    
+    // Check for current orientation
+    UIInterfaceOrientation io = [[UIApplication sharedApplication] statusBarOrientation];
+    [self preparesViewForOrientation:io];
+}
+
+// call everytime view gets popped off stack
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // clear first responder, dismisses any keyboard
+    [self.view endEditing:YES];
+    
+    // save all textfields back to item
+    
+    BNRItem *item = self.item;
+    
+    item.itemName = self.nameField.text;
+    item.serialNumber = self.serialNumberField.text;
+    item.valueInDollars = [self.valueField.text intValue];
+    
 }
 
 - (void)viewDidLoad
@@ -152,6 +226,8 @@
 //}
 
 
+#pragma mark Methods
+
 // override item getter
 - (void)setItem:(BNRItem *)item
 {
@@ -159,55 +235,24 @@
     self.navigationItem.title = _item.itemName;
 }
 
-// called everytime view loads
-- (void)viewWillAppear:(BOOL)animated
+- (void)updateFonts
 {
-    [super viewWillAppear:animated];
+    // Get a body font
+    UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     
-    BNRItem *item = self.item;
+    // Set fonts to all labels and textfields
+    self.nameLabel.font = font;
+    self.serialNumberLabel.font = font;
+    self.valueLabel.font = font;
+    self.dateLabel.font = font;
     
-    self.nameField.text = item.itemName;
-    self.serialNumberField.text = item.serialNumber;
-    self.valueField.text = [NSString stringWithFormat:@"%d", item.valueInDollars];
+    self.nameField.font = font;
+    self.serialNumberField.font = font;
+    self.valueField.font = font;
     
-    static NSDateFormatter *dateFormatter = nil;
-    if (!dateFormatter)
-    {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
-        dateFormatter.timeStyle = NSDateFormatterNoStyle;
-    }
-    
-    self.dateLabel.text = [dateFormatter stringFromDate:item.dateCreated];
-    
-    // load image
-    NSString *imageKey = self.item.itemKey;
-    UIImage *imageToDisplay = [[BNRImageStore sharedStore] imageForKey:imageKey];
-    
-    self.imageView.image = imageToDisplay;
-    
-    // Check for current orientation
-    UIInterfaceOrientation io = [[UIApplication sharedApplication] statusBarOrientation];
-    [self preparesViewForOrientation:io];
 }
 
-// call everytime view gets popped off stack
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    // clear first responder, dismisses any keyboard
-    [self.view endEditing:YES];
-    
-    // save all textfields back to item
-    
-    BNRItem *item = self.item;
-    
-    item.itemName = self.nameField.text;
-    item.serialNumber = self.serialNumberField.text;
-    item.valueInDollars = [self.valueField.text intValue];
-    
-}
+
 
 #pragma Button Methods
 - (void)save:(id)sender

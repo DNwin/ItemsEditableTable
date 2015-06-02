@@ -10,9 +10,12 @@
                 <outlet property="cameraButton" destination="R9C-EE-IkR" id="5Zf-zT-jgr"/>
                 <outlet property="dateLabel" destination="DkA-Rr-TTz" id="SCw-iX-MG8"/>
                 <outlet property="nameField" destination="TJU-EC-Sge" id="hnY-62-uCi"/>
+                <outlet property="nameLabel" destination="qz2-fM-X4K" id="UuA-IN-k7G"/>
                 <outlet property="serialNumberField" destination="ZUz-BU-1Rl" id="frG-Ak-yKi"/>
+                <outlet property="serialNumberLabel" destination="6iU-Gc-4UC" id="pza-Ke-WI9"/>
                 <outlet property="toolbar" destination="h6g-p3-MAU" id="eNo-S8-OdK"/>
                 <outlet property="valueField" destination="6dr-sc-fpp" id="6Er-aK-lkm"/>
+                <outlet property="valueLabel" destination="BkZ-SJ-cON" id="WP9-ut-64b"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -22,7 +25,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qz2-fM-X4K">
-                    <rect key="frame" x="20" y="85" width="54" height="21"/>
+                    <rect key="frame" x="20" y="85" width="46" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="54" id="ZNB-bi-aON"/>
                         <constraint firstAttribute="height" constant="21" id="fdn-dQ-C5x"/>
@@ -30,9 +33,15 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="ZNB-bi-aON"/>
+                            <exclude reference="fdn-dQ-C5x"/>
+                        </mask>
+                    </variation>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Serial" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6iU-Gc-4UC">
-                    <rect key="frame" x="20" y="137" width="43" height="21"/>
+                    <rect key="frame" x="20" y="137" width="46" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="uuo-ms-zfk"/>
                         <constraint firstAttribute="width" constant="43" id="wig-tk-0Qa"/>
@@ -40,6 +49,12 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="uuo-ms-zfk"/>
+                            <exclude reference="wig-tk-0Qa"/>
+                        </mask>
+                    </variation>
                 </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TJU-EC-Sge">
                     <rect key="frame" x="82" y="82" width="312" height="30"/>
@@ -50,7 +65,7 @@
                     </connections>
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BkZ-SJ-cON">
-                    <rect key="frame" x="21" y="185" width="42" height="27"/>
+                    <rect key="frame" x="21" y="185" width="46" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="42" id="Faw-bU-GFa"/>
                         <constraint firstAttribute="height" constant="27" id="Oif-pY-UrZ"/>
@@ -58,21 +73,19 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="Faw-bU-GFa"/>
+                            <exclude reference="Oif-pY-UrZ"/>
+                        </mask>
+                    </variation>
                 </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6dr-sc-fpp">
-                    <rect key="frame" x="82" y="184" width="312" height="30"/>
+                    <rect key="frame" x="82" y="178" width="312" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                     <connections>
                         <outlet property="delegate" destination="-1" id="zcT-Uq-XFP"/>
-                    </connections>
-                </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZUz-BU-1Rl">
-                    <rect key="frame" x="82" y="133" width="312" height="30"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="4s3-oW-Aet"/>
                     </connections>
                 </textField>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h6g-p3-MAU">
@@ -90,20 +103,35 @@
                     </items>
                 </toolbar>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DkA-Rr-TTz">
-                    <rect key="frame" x="20" y="222" width="374" height="21"/>
+                    <rect key="frame" x="20" y="216" width="374" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="rrB-1a-Ufv"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="rrB-1a-Ufv"/>
+                        </mask>
+                    </variation>
                 </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZUz-BU-1Rl">
+                    <rect key="frame" x="82" y="133" width="312" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="4s3-oW-Aet"/>
+                    </connections>
+                </textField>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="ZUz-BU-1Rl" firstAttribute="leading" secondItem="6iU-Gc-4UC" secondAttribute="trailing" constant="19" id="06i-jf-l8g"/>
                 <constraint firstItem="qz2-fM-X4K" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="85" id="19I-Ad-DfR"/>
+                <constraint firstItem="6dr-sc-fpp" firstAttribute="width" secondItem="ZUz-BU-1Rl" secondAttribute="width" id="1Qt-L4-EKB"/>
                 <constraint firstItem="BkZ-SJ-cON" firstAttribute="top" secondItem="6iU-Gc-4UC" secondAttribute="bottom" constant="27" id="4GO-6R-rTL"/>
+                <constraint firstItem="6dr-sc-fpp" firstAttribute="width" secondItem="TJU-EC-Sge" secondAttribute="width" id="6kA-sG-YaQ"/>
                 <constraint firstAttribute="trailing" secondItem="DkA-Rr-TTz" secondAttribute="trailing" constant="20" id="FGT-WJ-4Yz"/>
                 <constraint firstItem="qz2-fM-X4K" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="GgQ-S3-x04"/>
                 <constraint firstItem="6iU-Gc-4UC" firstAttribute="top" secondItem="qz2-fM-X4K" secondAttribute="bottom" constant="31" id="Jab-yf-aPn"/>
@@ -111,7 +139,9 @@
                 <constraint firstItem="BkZ-SJ-cON" firstAttribute="leading" secondItem="6iU-Gc-4UC" secondAttribute="leading" constant="1" id="Kxd-Ci-AhK"/>
                 <constraint firstAttribute="bottom" secondItem="h6g-p3-MAU" secondAttribute="bottom" id="Pcv-wr-LuF"/>
                 <constraint firstItem="DkA-Rr-TTz" firstAttribute="top" secondItem="6dr-sc-fpp" secondAttribute="bottom" constant="8" id="Pz8-5s-9IA"/>
+                <constraint firstItem="TJU-EC-Sge" firstAttribute="leading" secondItem="qz2-fM-X4K" secondAttribute="trailing" constant="16" id="RR1-ng-HCo"/>
                 <constraint firstAttribute="trailing" secondItem="h6g-p3-MAU" secondAttribute="trailing" id="TBb-TH-RHZ"/>
+                <constraint firstItem="BkZ-SJ-cON" firstAttribute="width" secondItem="6iU-Gc-4UC" secondAttribute="width" id="VrQ-wl-OWb"/>
                 <constraint firstItem="qz2-fM-X4K" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="29" id="ZFo-Yy-keu"/>
                 <constraint firstItem="h6g-p3-MAU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ZYP-3S-CvU"/>
                 <constraint firstItem="6dr-sc-fpp" firstAttribute="leading" secondItem="BkZ-SJ-cON" secondAttribute="trailing" constant="19" id="bww-r0-odq"/>
@@ -122,6 +152,7 @@
                 <constraint firstAttribute="trailing" secondItem="6dr-sc-fpp" secondAttribute="trailing" constant="20" id="g47-eP-7z0"/>
                 <constraint firstAttribute="trailing" secondItem="TJU-EC-Sge" secondAttribute="trailing" constant="20" id="hlk-BV-8FI"/>
                 <constraint firstItem="BkZ-SJ-cON" firstAttribute="baseline" secondItem="6dr-sc-fpp" secondAttribute="baseline" constant="4" id="hpr-XV-2eF"/>
+                <constraint firstItem="BkZ-SJ-cON" firstAttribute="width" secondItem="qz2-fM-X4K" secondAttribute="width" id="qlf-23-g9K"/>
                 <constraint firstItem="qz2-fM-X4K" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="xw4-39-Hde"/>
                 <constraint firstItem="6iU-Gc-4UC" firstAttribute="baseline" secondItem="ZUz-BU-1Rl" secondAttribute="baseline" constant="1" id="zZ3-T2-oST"/>
             </constraints>
@@ -131,6 +162,9 @@
                 <mask key="constraints">
                     <exclude reference="GgQ-S3-x04"/>
                     <exclude reference="ZFo-Yy-keu"/>
+                    <exclude reference="fzm-6n-1ir"/>
+                    <exclude reference="06i-jf-l8g"/>
+                    <exclude reference="bww-r0-odq"/>
                 </mask>
             </variation>
             <connections>
