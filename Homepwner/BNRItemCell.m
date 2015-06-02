@@ -60,6 +60,7 @@
 }
 
 // Called when loaded with NIB (For views, not view controllers)
+
 - (void)awakeFromNib
 {
     // Update fonts everytime cells are loaded
