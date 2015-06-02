@@ -28,7 +28,7 @@
 
 #pragma mark Controller Life Cycle
 
-// replace superclass designated initializer with init
+// Designated initializer, replace superclass designated initializer with init
 - (instancetype)init
 {
     // call superclass init
@@ -46,6 +46,14 @@
         // AUTOMATICALLY toggles editing mode (setEditing property)
         navItem.leftBarButtonItem = self.editButtonItem;
     }
+    
+    // Register for UIContentSize notification
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self
+                      selector:@selector(updateTableViewForDynamicTypeSize)
+                          name:UIContentSizeCategoryDidChangeNotification
+                        object:nil];
+                        
     return self;
 }
 
@@ -53,6 +61,13 @@
 - (instancetype)initWithStyle:(UITableViewStyle)style
 {
     return [self init];
+}
+
+- (void)dealloc
+{
+    // Deregister from NSNotificationCenter
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver: self];
 }
 
 #pragma mark View Life Cycle
@@ -63,7 +78,9 @@
     [super viewWillAppear:animated];
     
      //reload all table cells from data source when view reappears
-    [self.tableView reloadData];
+    [self updateTableViewForDynamicTypeSize];
+    
+    
 }
 // implement required TableView protocol
 //- (NSInteger)tableView:(UITableView *)tableView
@@ -79,6 +96,34 @@
     // Load NIB
     UINib *nib = [UINib nibWithNibName:@"BNRItemCell" bundle:nil];
     [self.tableView registerNib:nib forCellReuseIdentifier:@"BNRItemCell"];
+}
+
+// Updates a table view accounting for dynamic sizes, reloads the data
+- (void)updateTableViewForDynamicTypeSize
+{
+    static NSDictionary *cellHeightDictionary;
+    
+    // Create a dict associating UIContentSize with a NSNumber
+    if (!cellHeightDictionary)
+    {
+        cellHeightDictionary = @{ UIContentSizeCategoryExtraSmall : @44,
+                                  UIContentSizeCategorySmall : @44,
+                                  UIContentSizeCategoryMedium : @48,
+                                  UIContentSizeCategoryLarge : @50,
+                                  UIContentSizeCategoryExtraLarge : @55,
+                                  UIContentSizeCategoryExtraExtraLarge : @65,
+                                  UIContentSizeCategoryExtraExtraExtraLarge : @75 };
+    }
+    
+    // Obtain current content size
+    NSString *userSize = [[UIApplication sharedApplication] preferredContentSizeCategory];
+    // Obtain cell height using the content size string
+    NSNumber *cellHeight = cellHeightDictionary[userSize];
+    // Set cell height
+    [self.tableView setRowHeight:cellHeight.floatValue];
+    // Reload the data and cells
+    [self.tableView reloadData];
+    
 }
 #pragma mark Actions
 // Adds a new item
