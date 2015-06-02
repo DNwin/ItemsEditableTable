@@ -96,6 +96,46 @@
     return descriptionString;
 }
 
+#pragma mark Methods
+
+// Creates a thumbnail 40x40 image after passing in an image
+
+-(void)setThumbnailFromImage:(UIImage *)image
+{
+    CGSize origImageSize = image.size;
+    
+    // Rectangle of the thumbnail 40x40
+    CGRect newRect = CGRectMake(0, 0, 40, 40);
+    
+    // Make a scaling ratio to **maintain same ratio**
+    float ratio = MAX(newRect.size.width / origImageSize.width, newRect.size.height / origImageSize.height);
+    
+    // Make transparent bitmap context with scaling factor equal to screen
+    UIGraphicsBeginImageContextWithOptions(newRect.size, NO, 0.0);
+    
+    // Create a rounded rect
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:newRect cornerRadius:5.0];
+    
+    // Clip to this rounded rect
+    [path addClip];
+    
+    // Center image in thumbnail
+    CGRect projectRect;
+    projectRect.size.width = ratio * origImageSize.width;
+    projectRect.size.height = ratio * origImageSize.height;
+    projectRect.origin.x = (newRect.size.width - projectRect.size.width) / 2.0;
+    projectRect.origin.y = (newRect.size.width - projectRect.size.width) / 2.0;
+    
+    // Draw original image to it while scaling
+    [image drawInRect:projectRect];
+    
+    // Get the image from image context and keep as thumbnail
+    UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
+    self.thumbnail = smallImage;
+    
+    // Cleanup image context resources
+    UIGraphicsEndImageContext();
+};
 
 #pragma mark NSCoding Protocols
 
@@ -105,6 +145,7 @@
     [aCoder encodeObject:self.serialNumber forKey:@"serialNumber"];
     [aCoder encodeObject:self.dateCreated forKey:@"dateCreated"];
     [aCoder encodeObject:self.itemKey forKey:@"itemKey"];
+    [aCoder encodeObject:self.thumbnail forKey:@"thumbnail"];
     
     [aCoder encodeInt:self.valueInDollars forKey:@"valueInDollars"];
 }
@@ -119,6 +160,7 @@
         _serialNumber = [aDecoder decodeObjectForKey:@"serialNumber"];
         _dateCreated = [aDecoder decodeObjectForKey:@"dateCreated"];
         _itemKey = [aDecoder decodeObjectForKey:@"itemKey"];
+        _thumbnail = [aDecoder decodeObjectForKey:@"thumbnail"];
         
         _valueInDollars = [aDecoder decodeIntForKey:@"valueInDollars"];
     }

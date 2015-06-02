@@ -153,6 +153,9 @@
     cell.serialNumberLabel.text = item.serialNumber;
     cell.valueLabel.text = [NSString stringWithFormat:@"%d", item.valueInDollars];
     
+    // Set the image thumbnail
+    cell.thumbnailView.image = item.thumbnail;
+    
     // Implementation to present the popover controller that displays full sized image for BNRItem represented by the cell that was tapped
     
     __weak BNRItemCell *weakCell = cell;
